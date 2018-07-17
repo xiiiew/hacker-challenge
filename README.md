@@ -9,15 +9,12 @@
 大赛涉及合约共有四个：`GamerVerifier `、`CommonWalletLibrary`、`oobserver`和`TimeDelayedVault`。
 
 > GamerVerifier
-
 > 该合约存有本次大赛所有组参赛选手的比赛账号地址，我们可通过在etherscan上查询这些地址的交易信息，得知所有选手的分组情况以及他们组比赛合约地址。`addGamer`函数允许选手向该合约中添加非比赛账号，不过需要破解magic的值。
 
 > CommonWalletLibrary
-
 > 该合约是所有参赛组的钱包库合约，若该合约被摧毁，那么所有参赛组的合约都不能正常运行，直接游戏结束。所以要尽快找到库合约地址，并成功占领owner。`addToReserve`函数主要用于向库合约打钱，更新lastUpdated，使得owner在12小时内不能摧毁合约，让游戏可以继续运行下去。`initializeVault`(画圈圈！！重要！重要！重要！)，第一个调用该合约的地址将抢占owner，拥有游戏主导权。`basicWithdraw`用于用户一匹一匹向外搬砖，每30min可取出0.001eth。`resolve`用于owner摧毁库合约。
 
 > TimeDelayedVault  
-
 > 该合约是各个小组比赛合约，每个小组一个地址，所以抢占该合约是此次比赛首要任务。在其他队没有意识到抢占比赛合约之前，可自己通过一些手段查找到他们的比赛合约，及时抢占，他们的生死掌握在你们的手上。`addToReserve`与库合约类似，主要用于对其他组合约添加ether，使得他们没办法通过摧毁合约取出大量ether。`withdrawFund`用于本组用户从合约中搬砖。通过此方法取出的ether数量相当少，且每半小时才能取一次，且消耗gas相对于取出的ether太多，所以通过该方法取出的eth往往得不偿失。不过从积分计算规则可看出，通过漏洞取出第一笔钱的时间越短，积分越高。所以在抢占owner之后30分钟内要全组投票通过自己部署的Attacker合约地址，用于reentry攻击。`addAuthorizedAccount`用于全组成员投票Attacker地址，必须全队全票通过才算成功，所以考验团队凝聚力的时刻到了，每个参赛选手都必须时刻关注自己小组情况。`initilizeVault`用于摧毁比赛合约，取出合约中所有的ether。一定要趁早向合约中打入大量ether，以最快的时间摧毁该合约。否则等其他队意识到这个问题，就只能眼巴巴地看着他们给你的合约续命。
 
 ### 赛前准备
